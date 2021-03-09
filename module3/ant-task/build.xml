@@ -1,0 +1,42 @@
+<project name="ant-task" default="dist" basedir=".">
+
+  <property name="src" location="src"/>
+  <property name="test" location="test" />
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+
+  <target name="clean">
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+
+  <target name="compile">
+    <mkdir dir="build" />
+    <javac srcdir="${src}" destdir="${build}">
+      <classpath>
+        <pathelement path="lib/commons-collections-3.2.1.jar" />
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="test" depends="compile">
+    <junit printsummary="on" fork="true" haltonfailure="no">
+      <formatter type="xml" usefile="false" />
+      <batchtest>
+        <fileset dir="${test}">
+          <include name="**/*Test*.java" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="build" depends="test">
+   <mkdir dir="${build}/lib/" />
+   <jar jarfile="${build}/lib/antTaskProject.jar" basedir="${build}" />
+  </target>
+
+  <target name="dist" depends="build" >
+    <mkdir dir="${dist}/lib"/>
+    <jar jarfile="${dist}/lib/antTaskProject.jar" basedir="${build}"/>
+  </target>
+</project>
